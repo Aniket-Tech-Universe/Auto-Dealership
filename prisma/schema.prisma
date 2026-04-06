@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role { ADMIN SALES }
+enum VehicleStatus { AVAILABLE RESERVED SOLD }
+enum VehicleCondition { NEW USED CERTIFIED }
+enum EnquiryStatus { NEW CONTACTED FOLLOW_UP CONVERTED CLOSED LOST }
+enum EnquiryPriority { LOW MEDIUM HIGH }
+enum LeadSource { WEBSITE WALK_IN FACEBOOK INSTAGRAM WHATSAPP REFERRAL MARKETPLACE }
+enum PaymentMethod { CASH FINANCE LEASE BANK_TRANSFER CARD }
+enum InteractionType { CALL EMAIL SHOWROOM_VISIT TEST_DRIVE CHAT FOLLOW_UP_NOTE }
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  employee     Employee?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Employee {
+  id               String            @id @default(cuid())
+  userId           String?           @unique
+  fullName         String
+  email            String            @unique
+  phone            String
+  avatar           String?
+  role             Role
+  monthlyTarget    Int
+  active           Boolean           @default(true)
+  joinedAt         DateTime
+  user             User?             @relation(fields: [userId], references: [id])
+  sales            SaleTransaction[]
+  assignedEnquiries Enquiry[]        @relation("AssignedEnquiries")
+  interactions     InteractionLog[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Vehicle {
+  id           String           @id @default(cuid())
+  vin          String           @unique
+  make         String
+  model        String
+  trim         String
+  year         Int
+  mileage      Int
+  price        Int
+  color        String
+  fuelType     String
+  transmission String
+  bodyType     String
+  engine       String
+  horsepower   Int
+  drivetrain   String
+  condition    VehicleCondition
+  status       VehicleStatus    @default(AVAILABLE)
+  description  String
+  features     String[]
+  images       String[]
+  soldAt       DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  enquiries    Enquiry[]
+  interactions InteractionLog[]
+  sale         SaleTransaction?
+}
+
+model Customer {
+  id           String           @id @default(cuid())
+  name         String
+  email        String           @unique
+  phone        String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  enquiries    Enquiry[]
+  interactions InteractionLog[]
+  sales        SaleTransaction[]
+}
+
+model Enquiry {
+  id           String          @id @default(cuid())
+  customerId   String
+  vehicleId    String?
+  assignedToId String?
+  message      String
+  source       LeadSource
+  status       EnquiryStatus   @default(NEW)
+  priority     EnquiryPriority @default(MEDIUM)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  customer     Customer        @relation(fields: [customerId], references: [id])
+  vehicle      Vehicle?        @relation(fields: [vehicleId], references: [id])
+  assignedTo   Employee?       @relation("AssignedEnquiries", fields: [assignedToId], references: [id])
+  interactions InteractionLog[]
+}
+
+model InteractionLog {
+  id         String          @id @default(cuid())
+  employeeId String
+  customerId String?
+  vehicleId  String?
+  enquiryId  String?
+  type       InteractionType
+  note       String
+  followUpAt DateTime?
+  createdAt  DateTime        @default(now())
+  employee   Employee        @relation(fields: [employeeId], references: [id])
+  customer   Customer?       @relation(fields: [customerId], references: [id])
+  vehicle    Vehicle?        @relation(fields: [vehicleId], references: [id])
+  enquiry    Enquiry?        @relation(fields: [enquiryId], references: [id])
+}
+
+model SaleTransaction {
+  id             String        @id @default(cuid())
+  vehicleId      String        @unique
+  salespersonId  String
+  customerId     String
+  saleDate       DateTime
+  finalSalePrice Int
+  paymentMethod  PaymentMethod
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  vehicle        Vehicle       @relation(fields: [vehicleId], references: [id])
+  salesperson    Employee      @relation(fields: [salespersonId], references: [id])
+  customer       Customer      @relation(fields: [customerId], references: [id])
+}
