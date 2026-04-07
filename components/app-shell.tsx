@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Building2, ChartNoAxesCombined, CarFront, ClipboardList, LogOut, Users } from "lucide-react";
-import { logoutAction } from "@/lib/auth";
+import { logoutAction } from "@/lib/actions";
 import { Button } from "@/components/ui";
 
 const adminNav = [
