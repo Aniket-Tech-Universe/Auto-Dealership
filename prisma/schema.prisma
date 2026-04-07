@@ -7,14 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role { ADMIN SALES }
-enum VehicleStatus { AVAILABLE RESERVED SOLD }
-enum VehicleCondition { NEW USED CERTIFIED }
-enum EnquiryStatus { NEW CONTACTED FOLLOW_UP CONVERTED CLOSED LOST }
-enum EnquiryPriority { LOW MEDIUM HIGH }
-enum LeadSource { WEBSITE WALK_IN FACEBOOK INSTAGRAM WHATSAPP REFERRAL MARKETPLACE }
-enum PaymentMethod { CASH FINANCE LEASE BANK_TRANSFER CARD }
-enum InteractionType { CALL EMAIL SHOWROOM_VISIT TEST_DRIVE CHAT FOLLOW_UP_NOTE }
+enum Role {
+  ADMIN
+  SALES
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+
+enum VehicleCondition {
+  NEW
+  USED
+  CERTIFIED
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  FOLLOW_UP
+  CONVERTED
+  CLOSED
+  LOST
+}
+
+enum EnquiryPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum LeadSource {
+  WEBSITE
+  WALK_IN
+  FACEBOOK
+  INSTAGRAM
+  WHATSAPP
+  REFERRAL
+  MARKETPLACE
+}
+
+enum PaymentMethod {
+  CASH
+  FINANCE
+  LEASE
+  BANK_TRANSFER
+  CARD
+}
+
+enum InteractionType {
+  CALL
+  EMAIL
+  SHOWROOM_VISIT
+  TEST_DRIVE
+  CHAT
+  FOLLOW_UP_NOTE
+}
 
 model User {
   id           String   @id @default(cuid())
@@ -27,22 +77,22 @@ model User {
 }
 
 model Employee {
-  id               String            @id @default(cuid())
-  userId           String?           @unique
-  fullName         String
-  email            String            @unique
-  phone            String
-  avatar           String?
-  role             Role
-  monthlyTarget    Int
-  active           Boolean           @default(true)
-  joinedAt         DateTime
-  user             User?             @relation(fields: [userId], references: [id])
-  sales            SaleTransaction[]
+  id                String           @id @default(cuid())
+  userId            String?          @unique
+  fullName          String
+  email             String           @unique
+  phone             String
+  avatar            String?
+  role              Role
+  monthlyTarget     Int
+  active            Boolean          @default(true)
+  joinedAt          DateTime
+  user              User?            @relation(fields: [userId], references: [id])
+  sales             SaleTransaction[]
   assignedEnquiries Enquiry[]        @relation("AssignedEnquiries")
-  interactions     InteractionLog[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  interactions      InteractionLog[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }
 
 model Vehicle {

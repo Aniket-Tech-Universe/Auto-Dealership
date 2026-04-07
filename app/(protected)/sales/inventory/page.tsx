@@ -2,14 +2,14 @@ import { InventoryTable } from "@/components/tables/inventory-table";
 import { PageHeader } from "@/components/ui";
 import { getInventory } from "@/lib/queries";
 
-export default async function AdminInventoryPage() {
+export default async function SalesInventoryPage() {
   const inventory = await getInventory();
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Inventory"
-        description="Maintain current stock, pricing, and vehicle status."
+        description="Current stock with pricing and availability for customer conversations."
       />
       <InventoryTable
         data={inventory.map((vehicle) => ({
@@ -22,7 +22,6 @@ export default async function AdminInventoryPage() {
           mileage: vehicle.mileage,
           status: vehicle.status
         }))}
-        canManage
       />
     </div>
   );

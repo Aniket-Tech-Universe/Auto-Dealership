@@ -1,6 +1,6 @@
 # Auto Dealership
 
-Internal dealership management platform for inventory, enquiries, employees, reporting and personal sales performance.
+Automotive dealership management platform for internal daily operations.
 
 ## Stack
 
@@ -14,7 +14,7 @@ Internal dealership management platform for inventory, enquiries, employees, rep
 
 ## Why PostgreSQL instead of SQLite
 
-The original brief preferred Prisma + SQLite, but this repository is prepared to deploy on Vercel. Durable writes on Vercel are a much better fit with PostgreSQL than SQLite in a serverless environment, so the project uses PostgreSQL while keeping the rest of the requested architecture intact.
+The brief originally preferred Prisma + SQLite, but this repository is intended to be Vercel friendly. Durable writes on Vercel are a much better fit with PostgreSQL than SQLite, so the project uses PostgreSQL while preserving the rest of the requested architecture.
 
 ## Demo accounts
 
@@ -31,9 +31,22 @@ npm run db:seed
 npm run dev
 ```
 
-## Deploying to Vercel
+## Deploy to Vercel
 
-1. Provision Postgres (Neon, Supabase, Railway, Vercel Postgres, etc).
+1. Create a PostgreSQL database on Neon, Supabase, Railway, or Vercel Postgres.
 2. Add `DATABASE_URL` in Vercel project settings.
-3. Run `npm run db:push` and `npm run db:seed` once against the target database.
-4. Deploy normally.
+3. Run `npm run db:push` against the target database.
+4. Run `npm run db:seed` once.
+5. Deploy.
+
+## Product notes
+
+This app keeps the interface restrained and operational:
+- one admin workspace
+- one sales workspace
+- realistic data model
+- working role checks
+- working enquiry assignment and status updates
+- working sale logging
+- working interaction logging
+- vehicle create, edit, delete, and sold state handling

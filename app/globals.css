@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+}
+
+* {
+  border-color: hsl(220 16% 90%);
+}
+
+input,
+select,
+textarea {
+  @apply outline-none;
+}
+
+img {
+  display: block;
+}
